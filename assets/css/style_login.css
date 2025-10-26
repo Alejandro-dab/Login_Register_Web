@@ -1,0 +1,156 @@
+body{
+    background-color: #1f1f1f;
+    color: white;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family:'Lucida Sans', Arial, sans-serif;
+}
+
+/* Contenedor principal */
+.login-register{
+    background-color: rgba(0, 0, 0, 0.349);
+    display: flex;
+    /* Centrar horizontalmente */
+    justify-content: center;
+    max-width: 500vh;
+    min-height: 50vh;
+    margin: 0 auto;
+}
+
+/* Contenedores por sección */
+.login, .register{
+    width: 100%;
+    padding: 30px;
+    border: 1px solid rgba(8, 225, 233, 0.4);
+    box-shadow: 0 0 20px  rgba(46, 228, 228, 0.514);
+    border-radius: 10px;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Contenedores input */
+.login__input, .register__input{
+    background-color: #0d1117;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #30363d;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Titulos */
+legend, h1{
+    color: rgb(46, 228, 228);
+    text-align: center;
+    font-size: 50px;
+    margin: 20px 0;
+}
+
+/* Iconos */
+.fa-solid{
+    color: rgb(46, 228, 228);
+    font-size: 20px;
+    margin-right: 12px;
+}
+
+/* Campo de texto */
+.login__input input , .register__input input{
+    flex-grow: 1;
+    color: #e6edf3;
+    padding: 5px;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+/* Placeholder */
+.login__input input::placeholder, .register__input input::placeholder {
+    color: #8b949e; 
+}
+
+/* Botones para enviar formulario */
+.login__submit, .register__submit{
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 15px 0 30px 0;
+    background-color: rgb(46, 228, 228);
+    color: #0d1117;
+    font-weight:bold;
+}
+
+/* Texto plano */
+.text{
+    color: rgb(139, 148, 158);
+    display: block;
+    text-align: center;
+    margin: 10px;
+}
+
+/* Ocultar formulario */
+.oculto{
+    display: none !important;
+}
+
+/* Botones para cambiar sección */
+#register_btn--go, #login_btn--go{
+    background-color: #0d11177a;
+    color: rgb(35, 170, 170);
+    width: 100%;
+    border: 1px solid #30363d;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Terminos y condiciones */
+.terms__check{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.terms__check, .checkbox{
+    margin: 0 8px 0 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    
+    /* Contenedor principal */
+    .login-register {
+        /* Reduce el ancho máximo */
+        max-width: 90%; 
+        /* Elimina el margen auto si el contenedor principal por el flexbox */
+        margin: 0 5%; 
+    }
+    
+    /* Formulario y contenedor: */
+    .login, .register {
+        padding: 20px 15px; /* Reducimos el padding interno */
+        /* Aseguramos que la sombra sea sutil en móviles */
+        box-shadow: 0 0 10px rgba(46, 228, 228, 0.2); 
+    }
+
+    /* Títulos */
+    legend, h1 {
+        font-size: 2em; /* De 50px a un tamaño más manejable */
+        margin: 10px 0 20px 0;
+    }
+    
+    /* Íconos */
+    .fa-solid {
+        font-size: 18px;
+    }
+    
+    /* Inputs */
+    .login__input, .register__input {
+        padding: 8px; 
+    }
+}
