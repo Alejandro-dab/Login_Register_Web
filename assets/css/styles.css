@@ -1,0 +1,136 @@
+/* Estilos globales */
+body {
+    background-color: #1f1f1f;
+    color: #e6edf3; /* Color de texto base (gris claro) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+/* Tarjeta de perfil */
+.main-container {
+    /* Centrar la tarjeta */
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Asegura que ocupe toda la altura */
+    width: 100%;
+}
+
+.profile-card {
+    /* Mismo fondo semi-transparente del login, pero más compacto */
+    background-color: rgba(0, 0, 0, 0.4); 
+    width: 350px; /* Ancho fijo para la tarjeta */
+    padding: 20px;
+    
+    /* Mismos bordes y sombra de neón */
+    border: 1px solid rgba(46, 228, 228, 0.4); 
+    box-shadow: 0 0 30px rgba(46, 228, 228, 0.6); 
+    border-radius: 10px;
+    
+    /* Layout interno */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Sección de Encabezado/Estado */
+.card-header {
+    width: 100%;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #30363d; /* Separador sutil */
+}
+
+.card-header h3 {
+    color: rgb(46, 228, 228); /* Título en color neón */
+    font-size: 1.5em;
+    margin: 0 0 5px 0;
+}
+
+/* Sección del usuario */
+.user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-avatar-container {
+    /* Círculo que imita el borde de neón */
+    border: 3px solid rgb(46, 228, 228); 
+    box-shadow: 0 0 15px rgb(46, 228, 228); 
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 15px;
+    width: 100px; 
+    height: 100px;
+}
+
+.user-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-info .info-name {
+    font-size: 1.4em;
+    font-weight: bold;
+    display: block;
+    color: #ffffff;
+}
+
+.user-info .info-nick {
+    font-size: 0.9em;
+    color: #8b949e; /* Gris suave */
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Sección de los datos random */
+.user-stats {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 20px 0 10px 0;
+    margin-top: 15px;
+    border-top: 1px solid #30363d; /* Separador sutil */
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: rgb(46, 228, 228); /* Números en color neón */
+    margin: 0;
+}
+
+.stat-label {
+    font-size: 0.8em;
+    color: #8b949e; 
+    margin: 0;
+}
+
+/* Boton de cerrar sesión */
+.logout-btn {
+    margin-top: 20px;
+    padding: 8px 20px;
+    background-color: transparent; /* Fondo transparente */
+    color: rgb(46, 228, 228);
+    border: 1px solid rgb(46, 228, 228);
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+    background-color: rgba(46, 228, 228, 0.15); /* Efecto hover sutil */
+    color: #ffffff;
+}

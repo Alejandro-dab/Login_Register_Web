@@ -1,0 +1,18 @@
+DROP DATABASE IF EXISTS Users; 
+CREATE DATABASE Users; 
+USE Users;
+
+CREATE TABLE Usuarios(
+id_user INT UNSIGNED AUTO_INCREMENT NOT NULL PRIMARY KEY, 
+nombre_user VARCHAR(30) NOT NULL, 
+email_user VARCHAR(100) NOT NULL UNIQUE, 
+pass_user VARCHAR(255) NOT NULL, 
+admin_user BOOLEAN DEFAULT FALSE
+);
+
+USE Users;
+SELECT * FROM Usuarios;
+SELECT * FROM Games; 
+SELECT * FROM User_Games;
+
+DELETE FROM Usuarios WHERE id_user= 5; 

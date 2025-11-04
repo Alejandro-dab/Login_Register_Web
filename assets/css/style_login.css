@@ -5,7 +5,7 @@ body{
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    font-family:'Lucida Sans', Arial, sans-serif;
+    font-family:'Lucida Sans', Arial, sans-serif; 
 }
 
 /* Contenedor principal */
@@ -35,14 +35,19 @@ fieldset {
 }
 
 /* Contenedores input */
-.login__input, .register__input{
+.login__input, .register__input {
     background-color: #0d1117;
     display: flex;
-    align-items: center;
+    align-items: center; /* Esto alinea el ícono y el input al centro vertical */
     padding: 10px;
     border: 1px solid #30363d;
     border-radius: 5px;
     margin-bottom: 10px;
+}
+
+.login__input input, .register__input input {
+    /* ... otros estilos ... */
+    box-sizing: border-box; /* Fundamental */
 }
 
 /* Titulos */

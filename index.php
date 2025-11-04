@@ -1,78 +1,78 @@
+<?php
+// Esto asume que la conexion.php ya tiene session_start()
+include("conexion.php"); 
+
+// Si la sesión no está autenticada, redirigir al login
+if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true) {
+    header("Location: login_register.php");
+    exit();
+}
+
+//Variables de sesión
+$nombre_usuario = $_SESSION['nombre_user'];
+$es_admin = $_SESSION['admin_user'];
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Configuración de caracteres para admitir acentos y simbolos -->
     <meta charset="UTF-8">
-    <!-- Configuración de la ventana grafica-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Meta description: Es el texto que aparece debajo del título en los resultados de búsqueda de Google.-->
-    <meta name="description" content="H-Games">
-    <!-- Creador de la pagina web -->
-    <meta name="author" content="Alejandro Del Angel Bahena">
-
-    <!-- Previsualización web -->
-    <meta property="og:title" content="H-Games">
-    <meta property="og:image" content="assets/img/Logotipos/H.png">
-    <meta property="og:description" content="Tienda online de videojuegos">
-
-    <title>H-Games</title>
-    <!-- Cargar Bootstrap -->
-    <link rel="stylesheet" href="assets/css/bootstrap.rtl.min">
-    <!-- Restablecer propiedades de los atributos -->
+    <title>Tarjeta</title>
+    <!-- Resetear estilos del navegador -->
     <link rel="stylesheet" href="assets/css/reset.css">
-    <!-- Cargar estilos del index -->
-    <link rel="stylesheet" href="assets/css/style_index.css">
-    <!-- Cargar fuentes necesarias, alto rendimiento -->
-    <link rel="stylesheet" href="assets/css/all.min.css">
-    <!-- Icono mostrado en la pestaña del navegador -->
-    <link rel="icon" href="assets/img/Logotipos/H.png" type="image/png">
+    <!-- Estilos del login y el index -->
+    <link rel="stylesheet" href="assets/css/style_login.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Fuente de google Monserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
 </head>
 
 <body>
-<!-- Encabezado -->
-  <header>
-    <!-- Logotipo-->
-    <img class="img_logo" src="assets/img/Logotipos/H-Games_logo.png" alt="Logo de H Games" title="Logo H Games">
-    <nav class="nav">
-        <div class="nav__container">
-            <ul class="nav__ul">
-                <li class="nav__item">
-                </li>
-                <li class="nav__item"><a href="" class="nav__link"></a></li>
-                <li class="nav__item"><a href="" class="nav__link"></a></li>
-                <li class="nav__item"><a href="" class="nav__link"></a></li>
-            </ul>
+    <!-- Contenedor de la tarjeta -->
+    <div class="main-container"> <div class="profile-card">
+        <div class="card-header">
+            <h3>Tu Sesión es Correcta</h3>
+            <!-- Mostrar el id y el rol -->
+            <p>ID: <?php echo $_SESSION['user_id']; ?> | Rol: <?php echo ($es_admin == 1) ? 'Administrador' : 'Usuario Estándar'; ?></p>
         </div>
-    </nav>
-    
 
-    <!-- Barra de busqueda -->
-    <form class="buscar_juegos">
-        <label for="search">Busca el juego que quieras...</label>
-        <input type="search" id="buscar" name="buscar"> 
-    </form>
+        <!-- Contenedor del perfil -->
+        <div class="user-profile">
+            <figure class="user-avatar-container">
+                <img class="user-avatar" src="assets/img/Perfil.jpg" alt="Imagen del usuario">
+            </figure>
+            
+            <div class="user-info">
+            <!-- Mostrar el nombre del usuario -->
+            <span class="info-name"><?php echo $_SESSION['nombre_user']; ?></span>
+            <p class="info-city">Edo.Mex</p> 
+        </div> 
+        </div>
 
-    <!-- Mi carrito -->
-    <div class="Mi_carrito">
-        <img class="img_carrito" src="" alt="Elementos agregados al carrito para una compra en conjunto" title="Mi carrito" href="">
+        <!-- Información random -->
+        <div class="user-stats">
+            <div class="stat-item">
+                <p class="stat-number">15K</p>
+                <p class="stat-label">Seguidores</p>
+            </div>
+            <div class="stat-item">
+                <p class="stat-number">2K</p>
+                <p class="stat-label">Posts</p>
+            </div>
+            <div class="stat-item">
+                <p class="stat-number">125K</p>
+                <p class="stat-label">Me gusta</p>
+            </div>
+        </div>
+        
+        <!-- Botón de cerrar sesión y redirección a logout.php -->
+        <a href="logout.php" class="logout-btn">Cerrar Sesión</a>
     </div>
 
-    <!-- Boton de inicio de sesión -->
-    <div class="iniciar_sesion">
-        <img class="img_sesion" src="" alt="Inicio de sesión y registro" title="Iniciar sesión">
-        <a class="Btn_iniciar_sesion" href="login_register.php">Iniciar Sesión/Registro</a>
-    </div>
-
-  </header>
-
-  <main>
- 
-  </main>
-
-  <footer>
-
-  </footer>
-    <!-- Importar scripts de js Bootstrap -->
-    <script src="assets/js/bootstrap.bundle.min">    
+</div>
 </body>
 </html>
