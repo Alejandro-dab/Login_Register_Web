@@ -1,5 +1,4 @@
-<!-- Conexión monolitica a la base de datos MYSQL usando PHP. En la API ya uso PDO, puedo usar ambas-->
-<?php
+<?php // Conexión monolitica a la base de datos MYSQL usando PHP. En la API ya uso PDO, puedo usar ambas
 // Inicia la sesión de PHP. Debe ser lo PRIMERO en ejecutarse antes de cualquier salida.
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
