@@ -1,20 +1,37 @@
-<?php // Conexión monolitica a la base de datos MYSQL usando PHP. En la API ya uso PDO, puedo usar ambas
-// Inicia la sesión de PHP. Debe ser lo PRIMERO en ejecutarse antes de cualquier salida.
-if (session_status() == PHP_SESSION_NONE) {
+<?php
+// conexion.php FINAL (PARA RAILWAY Y LOCALHOST)
+
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// Lee las variables de entorno que Railway crea automáticamente
-$host = getenv('MYSQLHOST') ?: 'localhost';
-$user = getenv('MYSQLUSER') ?: 'root';
-$pass = getenv('MYSQLPASSWORD') ?: 'root';
-$db   = getenv('MYSQLDATABASE') ?: 'Users';
 
-$conexion = mysqli_connect($host, $user, $pass, $db);
+// 1. Leemos la variable DB_HOST de Railway
+$DB_HOST_RAILWAY = getenv('DB_HOST');
 
+if ($DB_HOST_RAILWAY) {
+    // ESTAMOS EN RAILWAY (PRODUCCIÓN)
+    // Lee todas las variables de entorno de Railway
+    $DB_HOST = $DB_HOST_RAILWAY;
+    $DB_USER = getenv('DB_USER');
+    $DB_PASS = getenv('DB_PASS');
+    $DB_NAME = getenv('DB_NAME');
+    $DB_PORT = (int)getenv('DB_PORT'); // Convertir a entero
 
-//Si la variable conexion es falso (si la conexión falló)
+} else {
+    // ESTAMOS EN LOCALHOST
+    // Usa tus credenciales locales (las que usas en Workbench)
+    $DB_HOST = '127.0.0.1'; // O 'localhost'
+    $DB_USER = 'root';      // Tu usuario local
+    $DB_PASS = '';          // Tu contraseña local (si no tienes, déjala vacía)
+    $DB_NAME = 'Users';     // El nombre de tu DB local
+    $DB_PORT = 3306;        // Puerto MySQL por defecto
+}
+
+// 2. Conectamos usando las variables correctas
+$conexion = mysqli_connect($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME, $DB_PORT);
+
+// 3. Verificamos la conexión
 if (!$conexion) {
-    // Si falla, muestra por qué (ahora veremos un error real, no "localhost")
     die("Error al conectarse a la base de datos: " . mysqli_connect_error());
 }
 ?>
