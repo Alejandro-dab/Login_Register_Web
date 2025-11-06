@@ -3,12 +3,11 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-// Railway nos da estas variables.
-// Leemos las variables de entorno que vamos a crear en el panel de Railway
-$host = getenv('MySQL.MYSQLHOST') ?: 'localhost';
-$user = getenv('MySQL.MYSQLUSER') ?: 'root';
-$pass = getenv('MySQL.MYSQLPASSWORD') ?: 'root';
-$db   = getenv('MySQL.MYSQLDATABASE') ?: 'Users';
+// Lee las variables de entorno que Railway crea automáticamente
+$host = getenv('MYSQLHOST') ?: 'localhost';
+$user = getenv('MYSQLUSER') ?: 'root';
+$pass = getenv('MYSQLPASSWORD') ?: 'root';
+$db   = getenv('MYSQLDATABASE') ?: 'Users';
 
 $conexion = mysqli_connect($host, $user, $pass, $db);
 
