@@ -24,12 +24,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     }
 
     //Valores de las variables PHP en MYSQL
-    $insertar = "INSERT INTO Usuarios (nombre_user, email_user, pass_user, admin_user) VALUES ('$user', '$email', '$pass_hash', '$admin')";
+    //Prepara la consulta con marcadores de posición (?)
+    $insertar = "INSERT INTO Usuarios (nombre_user, email_user, pass_user, admin_user) VALUES (?, ?, ?, ?)";
+    $stmt = mysqli_prepare($conexion, $insertar);
 
-    //Verificar usuario existente
-    $verificar_usuario = mysqli_query($conexion, "SELECT * FROM Usuarios WHERE nombre_user = '$user'");
-    //Verificar correo existente
-    $verificar_correo = mysqli_query($conexion, "SELECT * FROM Usuarios WHERE email_user='$email'");
+    //Vincula variables a los marcadores
+    // "sssi" significa (s)string, (s)string, (s)string, (i)integer
+    mysqli_stmt_bind_param($stmt, "sssi", $user, $email, $pass_hash, $admin);
+    // 1. Prepara
+    $sql = "SELECT * FROM Usuarios WHERE nombre_user = ?";
+    $stmt_user = mysqli_prepare($conexion, $sql);
+    // 2. Vincula
+    mysqli_stmt_bind_param($stmt_user, "s", $user);
+    // 3. Ejecuta
+    mysqli_stmt_execute($stmt_user);
+    // Prepara la verificación de CORREO
+    $sql_email = "SELECT * FROM Usuarios WHERE email_user = ?";
+    $stmt_email = mysqli_prepare($conexion, $sql_email);
+    mysqli_stmt_bind_param($stmt_email, "s", $email);
+    mysqli_stmt_execute($stmt_email);
+    $verificar_correo = mysqli_stmt_get_result($stmt_email);
+
+    // 4. Obtén el resultado para verificar las filas
+    $verificar_usuario = mysqli_stmt_get_result($stmt_user);
 
     // Verificamos que las contraseñas sean las mismas (PRIORIDAD)
     if($_POST['password_1'] != $pass_confirm) // Si password_1 no es igual a password_2
@@ -58,7 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     else 
     {
         //Si las validaciones fueron exitosas ejecutamos el insert
-        $agregar = mysqli_query($conexion, $insertar);
+        //Ejecuta la consulta preparada
+        $agregar = mysqli_stmt_execute($stmt);
+
         
         if($agregar)
         {
@@ -75,8 +94,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $mensaje = ($admin == 1) ? "Usuario administrador agregado" : "Usuario agregado";
             
             // Usamos la redirección más limpia con header()
-            echo '<script>alert("' . $mensaje . '"); </script>'; 
-            header("Location: index.php"); 
+            // Solución: Usamos JavaScript para la alerta Y la redirección
+            echo '<script>
+                    alert("' . $mensaje . '");
+                    window.location.href = "index.php";
+                </script>';
             exit();
         }
         else {
