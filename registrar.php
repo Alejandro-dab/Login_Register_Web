@@ -9,9 +9,10 @@ if (!isset($_SESSION)) {
 //Procesar si el formulario fue enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     
-    // Variables HTML -> PHP
-    $user = mysqli_real_escape_string($conexion, $_POST['user']);
-    $email = mysqli_real_escape_string($conexion, $_POST['email']);
+    // Variables HTML -> PHP (Quitamos mysqli_real_escape_string, ya no es necesario con prepared statements)
+    $user = $_POST['user'];
+    $email = $_POST['email'];
+    
     //Encriptamos la contraseña por seguridad y antes de guardarla en la base de datos. Se le dice hashear. 
     $pass_hash = password_hash($_POST['password_1'], PASSWORD_DEFAULT); 
     $pass_confirm = $_POST['password_2']; // Solo para la verificación inmediata
@@ -23,61 +24,64 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $admin = 1; //Asigna 1 si se encuentra admin en $email
     }
 
-    //Valores de las variables PHP en MYSQL
-    //Prepara la consulta con marcadores de posición (?)
-    $insertar = "INSERT INTO Usuarios (nombre_user, email_user, pass_user, admin_user) VALUES (?, ?, ?, ?)";
-    $stmt = mysqli_prepare($conexion, $insertar);
+    // --- PRIMERO PREPARAMOS TODAS LAS CONSULTAS ---
 
-    //Vincula variables a los marcadores
-    // "sssi" significa (s)string, (s)string, (s)string, (i)integer
-    mysqli_stmt_bind_param($stmt, "sssi", $user, $email, $pass_hash, $admin);
-    // 1. Prepara
-    $sql = "SELECT * FROM Usuarios WHERE nombre_user = ?";
-    $stmt_user = mysqli_prepare($conexion, $sql);
-    // 2. Vincula
+    // 1. Prepara la consulta de INSERT
+    $insertar = "INSERT INTO Usuarios (nombre_user, email_user, pass_user, admin_user) VALUES (?, ?, ?, ?)";
+    $stmt_insert = mysqli_prepare($conexion, $insertar);
+    // Vincula variables al INSERT
+    mysqli_stmt_bind_param($stmt_insert, "sssi", $user, $email, $pass_hash, $admin);
+    
+    // 2. Prepara la consulta de verificar USUARIO
+    $sql_user = "SELECT * FROM Usuarios WHERE nombre_user = ?";
+    $stmt_user = mysqli_prepare($conexion, $sql_user);
     mysqli_stmt_bind_param($stmt_user, "s", $user);
-    // 3. Ejecuta
-    mysqli_stmt_execute($stmt_user);
-    // Prepara la verificación de CORREO
+
+    // 3. Prepara la consulta de verificar CORREO
     $sql_email = "SELECT * FROM Usuarios WHERE email_user = ?";
     $stmt_email = mysqli_prepare($conexion, $sql_email);
     mysqli_stmt_bind_param($stmt_email, "s", $email);
-    mysqli_stmt_execute($stmt_email);
-    $verificar_correo = mysqli_stmt_get_result($stmt_email);
 
-    // 4. Obtén el resultado para verificar las filas
-    $verificar_usuario = mysqli_stmt_get_result($stmt_user);
+
+    // --- AHORA EJECUTAMOS Y VALIDAMOS ---
+
+    // Ejecuta y obtén resultados de USUARIO
+    mysqli_stmt_execute($stmt_user);
+    $verificar_usuario = mysqli_stmt_get_result($stmt_user); // <-- CAMBIO: Movido aquí
+
+    // Ejecuta y obtén resultados de CORREO
+    mysqli_stmt_execute($stmt_email);
+    $verificar_correo = mysqli_stmt_get_result($stmt_email); // <-- CAMBIO: Movido aquí
 
     // Verificamos que las contraseñas sean las mismas (PRIORIDAD)
     if($_POST['password_1'] != $pass_confirm) // Si password_1 no es igual a password_2
     {
         echo '<script>
-            alert("Las contraseñas no coinciden");
-            window.location = "login_register.php";
-        </script>';
+                alert("Las contraseñas no coinciden");
+                window.location = "login_register.php";
+            </script>';
     } 
     // Verificamos que no se repita el email en la base de datos. 
     elseif(mysqli_num_rows($verificar_correo) > 0)
     {
         echo '<script>
-            alert("Este correo ya está en uso");
-            window.location = "login_register.php";
-        </script>';
+                alert("Este correo ya está en uso");
+                window.location = "login_register.php";
+            </script>';
     }
     // Verificamos que el usuario no se repita
     elseif(mysqli_num_rows($verificar_usuario) > 0)
     {
         echo '<script>
-            alert("Este usuario ya está en uso");
-            window.location = "login_register.php";
-        </script>';
+                alert("Este usuario ya está en uso");
+                window.location = "login_register.php";
+            </script>';
     }    
     else 
     {
         //Si las validaciones fueron exitosas ejecutamos el insert
         //Ejecuta la consulta preparada
-        $agregar = mysqli_stmt_execute($stmt);
-
+        $agregar = mysqli_stmt_execute($stmt_insert);
         
         if($agregar)
         {
@@ -105,12 +109,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             //Fallo en la inserción a la base de datos
             echo '<script>
             alert("Error al intentar agregar usuario: '.mysqli_error($conexion).'");
-            </script>';
+            </Sscript>';
             
             // El die() detiene el script de PHP, por lo que no hace falta
             // usar window.location aquí, evitando el "parpadeo" de la redirección.
             die(); 
         }
     }
+
+    // Cerramos los statements para limpiar la conexión
+    mysqli_stmt_close($stmt_insert);
+    mysqli_stmt_close($stmt_user);
+    mysqli_stmt_close($stmt_email);
 }
 ?>
