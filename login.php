@@ -1,27 +1,27 @@
 <?php
 include("conexion.php"); // Incluye la conexión y, por lo tanto, session_start()
 
-// Asegúrate de que solo procesamos formularios POST
+// Asegúramos de que solo procesamos formularios POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
-    // 1. Recibir datos (ya no necesitamos mysqli_real_escape_string)
+    //Recepción de datos (ya no necesitamos mysqli_real_escape_string)
     $user_o_email = $_POST['user_o_email']; 
     $pass_ingresada = $_POST['password']; 
 
-    // 2. PREPARAR LA CONSULTA (¡SEGURA!)
+    //Preparamos la consulta
     // Usamos marcadores de posición (?) para evitar Inyección SQL
     $query = "SELECT * FROM Usuarios WHERE nombre_user = ? OR email_user = ? LIMIT 1";
     $stmt = mysqli_prepare($conexion, $query);
 
-    // 3. VINCULAR LAS VARIABLES
+    //Vinculamos variables
     // "ss" significa que estamos vinculando dos (s)trings
     // Vinculamos la *misma* variable $user_o_email a los dos marcadores (?)
     mysqli_stmt_bind_param($stmt, "ss", $user_o_email, $user_o_email);
     
-    // 4. EJECUTAR
+    //Ejecutamos la consulta que se preparo
     mysqli_stmt_execute($stmt);
 
-    // 5. OBTENER EL RESULTADO
+    //Obtenemos el resultado
     $ejecutar = mysqli_stmt_get_result($stmt);
 
     //Verificar si el usuario existe
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $usuario = mysqli_fetch_assoc($ejecutar);
         $hash_guardado = $usuario['pass_user']; //Hash encriptado de la BD
 
-        //Verificar la contraseña encriptada (ESTO YA ESTABA PERFECTO)
+        //Verificar la contraseña encriptada
         if (password_verify($pass_ingresada, $hash_guardado)) {
             
             //Iniciar sesión y guardar variables

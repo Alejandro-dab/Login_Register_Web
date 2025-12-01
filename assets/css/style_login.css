@@ -46,7 +46,6 @@ fieldset {
 }
 
 .login__input input, .register__input input {
-    /* ... otros estilos ... */
     box-sizing: border-box; /* Fundamental */
 }
 
