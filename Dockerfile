@@ -1,9 +1,9 @@
-# El archivo Docker le dice a Render que construya un entorno que use PHP 8.1 con Apache.
-# Usa una imagen oficial de PHP con Apache
-FROM php:8.1-apache 
-# Instala las extensiones mysqli (para conectar a MySQL)
+FROM php:8.1.32-apache
+
 RUN docker-php-ext-install mysqli pdo pdo_mysql
- # Copia todo el código a la carpeta del servidor
+
 COPY . /var/www/html
-#Puerto estándar de web
-EXPOSE 80 
+
+EXPOSE 80
+
+CMD ["/bin/sh", "-c", "a2dismod mpm_event mpm_worker 2>/dev/null; a2enmod mpm_prefork 2>/dev/null; apache2-foreground"]
