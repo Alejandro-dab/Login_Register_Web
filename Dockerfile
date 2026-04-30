@@ -1,11 +1,25 @@
-# El archivo Docker le dice a Render que construya un entorno que use PHP 8.1 con Apache.
-# Usa una imagen oficial de PHP con Apache
-FROM php:8.1-apache 
-# Solución al error de modulos duplicados en Railway
-RUN a2dismod mpm_event && a2enmod mpm_prefork
-# Instala las extensiones mysqli (para conectar a MySQL)
+FROM php:8.1-apache
+
+# Instalamos extensiones necesarias para MySQL
 RUN docker-php-ext-install mysqli pdo pdo_mysql
- # Copia todo el código a la carpeta del servidor
-COPY . /var/www/html
-#Puerto estándar de web
-EXPOSE 80 
+
+# Desactivamos módulos conflictivos y configuramos el motor correcto
+RUN a2dismod mpm_event || true && \
+    rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_event.conf && \
+    a2enmod mpm_prefork
+
+
+# Desactivamos el módulo que causa el error y activamos el correcto
+RUN a2dismod mpm_event || true && a2enmod mpm_prefork
+
+# Copiamos el código al directorio estándar de Apache
+COPY . /var/www/html/
+
+# Aseguramos que Apache sea el dueño de los archivos (Buenas prácticas)
+RUN chown -R www-data:www-data /var/www/html
+
+# Exponemos el puerto 80
+EXPOSE 80
+
+# Comando para mantener Apache corriendo en primer plano
+CMD ["apache2-foreground"]
